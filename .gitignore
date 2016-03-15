@@ -1,0 +1,4 @@
+/SmartGrocer/build/*
+/SmartGrocer/.settings/*
+*.classpath
+*.project
