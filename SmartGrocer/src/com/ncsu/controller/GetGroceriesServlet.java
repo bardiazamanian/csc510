@@ -33,17 +33,17 @@ public class GetGroceriesServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub .. 
 		// Make a call to DB to obtain groceries. Need to decide if we are going to use any patterns
-		MySQLGroceryStore gStore = new MySQLGroceryStore();
-		
-		List<GroceryStoreInventory> gsil = gStore.getGroceryStoreInventory();
+		MySQLShoppingList mySqlSL = new MySQLShoppingList();
+		List<ShoppingList> sll = mySqlSL.getPreviousShoppingList();
 		
 		String groceriesList = " New Grocery List: ";
 		
-		for(GroceryStoreInventory gsiItem : gsil){
-			System.out.println(gsiItem.getItem());
-			groceriesList += gsiItem.getItem();
-			groceriesList += " ";
+		for(ShoppingList item : sll){
+			
+			groceriesList += item.getItem();
+			groceriesList += ", ";
 		}
+		mySqlSL.saveShoppingList(sll);
 		
 		request.setAttribute("groceryList", groceriesList);
 		request.getRequestDispatcher("jsp/displayGroceryList.jsp").forward(request, response);
