@@ -4,12 +4,20 @@
   <welcome-file-list>
     <welcome-file>home.jsp</welcome-file>
   </welcome-file-list>
-    <servlet>
+  <servlet>
     <servlet-name>GetGroceries</servlet-name>
     <servlet-class>GetGroceriesServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>GetGroceries</servlet-name>
     <url-pattern>/getGroceryList</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>SaveShoppingList</servlet-name>
+    <servlet-class>com.ncsu.controller.SaveShoppingListServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SaveShoppingList</servlet-name>
+    <url-pattern>/saveShoppingList</url-pattern>
   </servlet-mapping>
 </web-app>

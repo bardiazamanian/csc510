@@ -45,7 +45,7 @@ public class GetGroceriesServlet extends HttpServlet {
 		}
 		mySqlSL.saveShoppingList(sll);
 		
-		request.setAttribute("groceryList", groceriesList);
+		request.setAttribute("sll", sll);
 		request.getRequestDispatcher("jsp/displayGroceryList.jsp").forward(request, response);
 	}
 
