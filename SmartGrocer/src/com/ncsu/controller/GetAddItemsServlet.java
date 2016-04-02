@@ -11,20 +11,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.ncsu.database.MySQLItems;
 import com.ncsu.database.MySQLShoppingList;
-import com.ncsu.model.ShoppingList;
+import com.ncsu.model.Item;
 
 /**
  * Servlet implementation class HelloServlet
  */
-@WebServlet("/GetGroceries")
-public class GetGroceriesServlet extends HttpServlet {
+@WebServlet("/getPurchasedItems")
+public class GetAddItemsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetGroceriesServlet() {
+    public GetAddItemsServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,15 +34,13 @@ public class GetGroceriesServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub .. 
-		// Make a call to DB to obtain groceries. Need to decide if we are going to use any patterns
-		MySQLShoppingList mySqlSL = new MySQLShoppingList();
-		List<ShoppingList> sll = mySqlSL.getShoppingList();
+		MySQLItems itemsPurchased = new MySQLItems();
+		List<Item> purchasedItems = itemsPurchased.getPurchasedItemsLastWeek();
 		
-		String jsonShoppingList = new Gson().toJson(sll);
+		String jsonPurchasedItems = new Gson().toJson(purchasedItems);
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
-		response.getWriter().write(jsonShoppingList);
+		response.getWriter().write(jsonPurchasedItems);
 	}
 
 	/**
@@ -49,11 +48,12 @@ public class GetGroceriesServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String tblValues=  request.getParameter("tableValues");
 		
-		java.lang.reflect.Type listType = new TypeToken<List<ShoppingList>>(){}.getType();
-		List<ShoppingList> items = new Gson().fromJson(tblValues,listType);
-		MySQLShoppingList mySqlSL = new MySQLShoppingList();
-		mySqlSL.saveShoppingList(items);
+		String selectedValues=  request.getParameter("checkedVal");
+		java.lang.reflect.Type listType = new TypeToken<List<Item>>(){}.getType();
+		List<Item> items = new Gson().fromJson(selectedValues,listType);
+		
+		MySQLShoppingList sl = new MySQLShoppingList();
+		sl.addItemsToShoppingList(items);
 	}
 }
