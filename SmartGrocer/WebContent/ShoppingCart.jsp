@@ -11,26 +11,54 @@
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script> 
         $( document ).ready(function() {
-           var mainDiv = $("#mainDiv");
-           mainDiv.empty();
-           // retrieveShoppingCart();
-           retrieveTotalPrice();
+           showShoppingCart();
         });
-        
-        function retrieveTotalPrice()
+
+        function showShoppingCart()
         {
-        	 var jumbotron = $(".jumbotron");
-             var mainDiv = $("#mainDiv");
-             jumbotron.empty();
-         	   mainDiv.empty();
-         		$("#statusBar").empty();
+            var mainDiv = $("#mainDiv");
+         	mainDiv.empty();
+         	//Dynamically constructing the Shopping Cart table
+         	var $subdiv = $("<div class='bs-example' data-example-id='hoverable-table'>").appendTo(mainDiv);
+         	var $table = $("<table id='tbl_shoppinglist' class='table table-hover'>").appendTo($subdiv);
+         	var $theader = $("<tr>").appendTo($table);
+         	$("<th>").appendTo($theader);
+         	$("<th>").text("Item").appendTo($theader);
+         	$("<th>").text("Quantity").appendTo($theader);
+         	$("<th>").text("Price").appendTo($theader);
          	
-         	//Dynamically constructing the Shopping List table
-         	// var $subdiv = $("<div class='bs-example' data-example-id='hoverable-table'>").appendTo(mainDiv);
-         	$.get("GetTotalPrice", function(jsonTotalPrice) {
-         	$(jumbotron).append($("<p class='lead'>").text(jsonTotalPrice))
+         	var $tbody = $("<tbody>").appendTo($table);
+         	
+
+       		
+         	$.get("GetShoppingCart", function(responseJson) {
+         		$.each(responseJson, function(index, shoppingcart) { 
+         			var $tr = $("<tr>").appendTo($tbody);
+         			var $th = $("<th scope='row'>").appendTo($tr);
+         			$("<td class='name'>").append(shoppingcart.item).appendTo($tr);
+         			$("<td class='qty'>").append(shoppingcart.itemCount).appendTo($tr);
+         			$("<td class='price'>").append(shoppingcart.itemPrice*shoppingcart.itemCount).appendTo($tr);
+         	  	});
+         		var $tr_extra_1 = $("<tr>").appendTo($tbody)
+           		$("<td>").appendTo($tr_extra_1);
+           		$("<td>").appendTo($tr_extra_1);
+           		$("<td>").appendTo($tr_extra_1);
+           		$("<th>").append("Total Price").appendTo($tr_extra_1);
+           		var $tr_extra_2 = $("<tr>").appendTo($tbody)
+           		$("<td>").appendTo($tr_extra_2);
+           		$("<td>").appendTo($tr_extra_2);
+           		$("<td>").appendTo($tr_extra_2);
+           		$("<td id='total_price_caption'>").append().appendTo($tr_extra_2);
+           		$.get("GetTotalPrice", function(jsonTotalPrice){
+           			$("#total_price_caption").text(jsonTotalPrice);
+           		});
          	});
-        }   
+         	//$.get("GetTotalPrice", function(jsonTotalPrice){$("#total_price_caption").text = jsonTotalPrice});
+        }
+       $(document).on("click", "#purchase_button", function()
+       {
+        	$.post("PurchaseItems", function(Status){showShoppingCart();}) 
+       });   
             
  </script>
 <!-- Latest compiled and minified JavaScript -->
@@ -45,18 +73,20 @@
 
       <!-- The justified navigation menu is meant for single line per list item.
            Multiple lines will require custom code not provided by Bootstrap. -->
-      <!-- Jumbotron -->
+      <!-- Jumbotron--> 	
       <div class="jumbotron">
+      	<h2>Shopping Cart</h2>
       </div>
-
+      
+	  <a id="home_button" class="btn btn-success" href="home.jsp">Home</a>
+	  
+	  <p></p>
+	  
       <!-- Example row of columns -->
       <div id="mainDiv" class="row">
       </div>
-
-      <div id="statusBar" class="row">
-      
-      </div>
-
+	  <a id="purchase_button" class="btn btn-primary">Purchase</a>
+        
       <!-- Site footer -->
       <footer class="footer">
         <p>&copy; CSC510</p>
